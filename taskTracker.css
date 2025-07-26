@@ -1,0 +1,94 @@
+*
+{
+    /* margin:0;
+    padding:0; */
+    box-sizing: border-box;
+    text-decoration: none;
+    list-style: none;
+}
+
+/* CSS for the Task Input Div Starts */
+.addTask
+{
+    display: flex;
+    flex-direction: column;
+    margin: 20px;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+}
+#taskInput
+{
+    margin: 10px 0;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+#taskInputBTN
+{
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    border-radius: 5px;
+    font-size: 16px;
+
+}
+/* CSS for the Task Input Div Ends */
+
+.task
+{
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 20px;
+    padding: 10px;
+    border: 1px solid #ccc;
+}
+
+.taskValue
+{
+    margin: 5px 0;
+    font-size: 16px;
+    color: #333;
+    border: 3px solid #ccc;
+    padding: 5px;
+    border-radius: 5px; 
+    background-color: #f9f9f9;
+}
+
+.taskLabel
+{
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.deleteButton
+{
+    background-color: #ff4d4d;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+    margin: 10px;
+    border-radius: 5px;
+}
+
+.editButton
+{
+    background-color: #4d94ff;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+    margin: 10px;
+    border-radius: 5px;
+}
+
+.taskStatusDiv
+{
+    display: flex;
+    align-items: center;
+    margin: 10px 0;
+}
