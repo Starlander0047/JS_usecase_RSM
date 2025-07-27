@@ -6,6 +6,26 @@
     text-decoration: none;
     list-style: none;
 }
+.header
+{
+    background-color: #76bbdc;
+    color: white;
+    padding: 1px;
+    text-align: center;
+    font-size: 24px;
+    font-weight: bold;
+    border-radius: 10px;
+}
+.task
+{
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 20px;
+    padding: 10px;
+    border: 4px solid #666161;
+    border-radius: 10px;
+    background-color: #f0f0f0;
+}
 
 /* CSS for the Task Input Div Starts */
 .addTask
@@ -22,7 +42,7 @@
     margin: 10px 0;
     padding: 10px;
     font-size: 16px;
-    border: 1px solid #ccc;
+    border: 1px solid #a7a4a4;
     border-radius: 5px;
 }
 #taskInputBTN
@@ -38,21 +58,15 @@
 }
 /* CSS for the Task Input Div Ends */
 
-.task
-{
-    display: flex;
-    flex-direction: column;
-    margin-bottom: 20px;
-    padding: 10px;
-    border: 1px solid #ccc;
-}
+
+/* CSS for the Task Value Div Starts */
 
 .taskValue
 {
     margin: 5px 0;
     font-size: 16px;
     color: #333;
-    border: 3px solid #ccc;
+    border: 3px solid #978b8b;
     padding: 5px;
     border-radius: 5px; 
     background-color: #f9f9f9;
@@ -63,7 +77,10 @@
     font-weight: bold;
     margin-bottom: 5px;
 }
+/* CSS for the Task Value Div Ends */
 
+
+/* CSS for the Operations Div Starts */
 .deleteButton
 {
     background-color: #ff4d4d;
@@ -92,3 +109,61 @@
     align-items: center;
     margin: 10px 0;
 }
+
+.taskAssignDiv
+{
+    display: flex;
+    align-items: center;
+    margin: 10px 0;
+}
+
+.taskStatusBTN,
+.taskAssignBTN
+{
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+    margin-left: 10px;
+    border-radius: 5px;
+}
+
+.taskStatusLabel,
+.taskAssignLabel
+{
+    font-weight: bold;
+    margin-right: 10px;
+}
+
+.taskStatusSelect,
+.taskAssignSelect
+{
+    padding: 3px;
+    font-size: 14x;
+    border: 1px solid #a7a4a4;
+    border-radius: 5px;
+}
+/* CSS for the Operations Div Ends */
+
+
+/* CSS for the Display Overview Div Starts */
+.displayOverview
+{
+    display: flex;
+    justify-content: space-between;
+    margin: 20px;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    background-color: #f0f0f0;
+}
+.displayAssigned,
+.displayStatus
+{
+    font-size: 18px;
+    color: #333;
+    font-weight: bold;
+}
+
+/* CSS for the Display Overview Div Ends */

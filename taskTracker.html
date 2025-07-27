@@ -6,9 +6,9 @@
     <title>Team Task Tracker</title>
     <link rel="stylesheet" href="taskTracker.css">
 </head>
-<body onload="renderTasks()">
+<body">
     <div class="header">
-        <h1>Hello "Asad"</h1>
+        <h1>Team Task Tracker</h1>
     </div>
 
     <div class="body">
@@ -26,6 +26,7 @@
     </div>
 </body>
 
+
 <script>
     const tasks = [];
     taskID = 0;
@@ -42,7 +43,7 @@
         const task = {
             id: taskID,
             value: taskValue,
-            status: "todo",
+            status: "*New",
             assignedTo: []
         };
         tasks.push(task);
@@ -97,8 +98,9 @@
             taskAssignDiv.appendChild(label);
 
             const taskAssign = document.createElement('select');
+            taskAssign.id = 'taskAssignSelect';
+            taskAssign.className = 'taskAssignSelect';
             
-            taskAssign.className = 'taskAssign';
             const options = ['Select', 'Asad', 'Umar', 'Peter', 'Nitin', 'Piyush'];
             options.forEach(option => {
                 const opt = document.createElement('option');
@@ -110,12 +112,12 @@
                 }
                 taskAssign.appendChild(opt);
             });
-            const assignTaskBTN = document.createElement('button');
-            assignTaskBTN.textContent = 'Assign Task';
-            assignTaskBTN.className = 'assignTaskBTN';
+            const taskAssignBTN = document.createElement('button');
+            taskAssignBTN.textContent = 'Assign Task';
+            taskAssignBTN.className = 'taskAssignBTN';
 
             taskAssignDiv.appendChild(taskAssign);
-            taskAssignDiv.appendChild(assignTaskBTN);
+            taskAssignDiv.appendChild(taskAssignBTN);
             
 
             // Task Status Input
@@ -128,7 +130,8 @@
             statusDiv.appendChild(taskStatusLabel);
 
             const taskStatus = document.createElement('select');
-            taskStatus.className = 'taskStatus';
+            taskStatus.id = 'taskStatusSelect';
+            taskStatus.className = 'taskStatusSelect';
             const statusOptions = ['Select', 'Todo', 'In-progress', 'Done'];
             statusOptions.forEach(status => {
                 const statusOpt = document.createElement('option');
@@ -142,6 +145,13 @@
             });
             statusDiv.appendChild(taskStatus);
 
+            const taskStatusBTN = document.createElement('button');
+            taskStatusBTN.textContent = 'Update Status';
+            taskStatusBTN.className = 'taskStatusBTN';
+            statusDiv.appendChild(taskStatusBTN);
+
+
+            // Append all elements to the taskDiv
             operationsDiv.appendChild(deleteButton);
             operationsDiv.appendChild(editButton);
             operationsDiv.appendChild(taskAssignDiv);
@@ -149,8 +159,23 @@
 
             taskDiv.appendChild(operationsDiv);
 
+            // Display 'task assigned users' and 'task status'
+            const displayOverview = document.createElement('div');
+            displayOverview.className = 'displayOverview';
+            const displayAssigned = document.createElement('h2');
+            displayAssigned.className = 'displayAssigned';
+            displayAssigned.textContent = `Assigned To: ${task.assignedTo.length > 0 ? task.assignedTo.join(', ') : 'None'}`;
+            displayOverview.appendChild(displayAssigned);
+            const displayStatus = document.createElement('h2');
+            displayStatus.className = 'displayStatus';
+            displayStatus.textContent = `Status: ${task.status}`;
+            displayOverview.appendChild(displayStatus);
 
+            taskDiv.appendChild(displayOverview);
+
+            // Append taskDiv to tasksDiv
             tasksDiv.appendChild(taskDiv);
+
         });
 
         if(tasksDiv.children.length === 0) {
@@ -160,20 +185,53 @@
             noTaskMSG.style.color = 'red';
             tasksDiv.appendChild(noTaskMSG);
         }
-
-        // Add event listener
-        tasksDiv.addEventListener('click', function(event) {
-            if(event.target && event.target.matches('.deleteButton')) {
-                const taskDiv = event.target.closest('.task');
-                const taskId = parseInt(taskDiv.id);
-                const taskIndex = tasks.findIndex(task => task.id === taskId);
-                if (taskIndex > -1) {
-                    tasks.splice(taskIndex, 1);
-                    renderTasks();
-                }
-            } 
-        });
     }
+
+    // Add event listener to tasksDiv
+    const tasksDiv = document.getElementById('tasksDiv');
+    tasksDiv.addEventListener('click', function(event) {
+        if(event.target && event.target.matches('.deleteButton'))
+        {
+            const taskDiv = event.target.closest('.task');
+            const taskId = parseInt(taskDiv.id);
+            const taskIndex = tasks.findIndex(task => task.id === taskId);
+            if (taskIndex > -1)
+            {
+                tasks.splice(taskIndex, 1);
+                renderTasks();
+            }
+        }
+        else if(event.target && event.target.matches('.taskAssignBTN'))
+        {
+            const taskDiv = event.target.closest('.task');
+            const taskID = parseInt(taskDiv.id);
+            const taskIndex = tasks.findIndex(task => task.id === taskID);
+            const taskAssignSelect = taskDiv.querySelector('#taskAssignSelect');
+            const assignedTo = taskAssignSelect.value;
+            if (taskIndex > -1 && assignedTo !== 'Select' && tasks[taskIndex].assignedTo.includes(assignedTo) === false)
+            {
+                tasks[taskIndex].assignedTo.push(assignedTo);
+                alert(`Task assigned to ${assignedTo}`);
+                renderTasks();
+            }
+            else alert('Please select a valid user to assign the task');
+        }
+        else if(event.target && event.target.matches('.taskStatusBTN'))
+        {
+            const taskDiv = event.target.closest('.task');
+            const taskID = parseInt(taskDiv.id);
+            const taskIndex = tasks.findIndex(task => task.id === taskID);
+            const taskStatusSelect = taskDiv.querySelector('#taskStatusSelect');
+            const status = taskStatusSelect.value;
+            if (taskIndex > -1 && status !== 'Select')
+            {
+                tasks[taskIndex].status = status;
+                alert(`Task status updated to ${status}`);
+                renderTasks();
+            }
+            else alert('Please select a valid status');
+        }
+    });
 
 </script>
 </html>
