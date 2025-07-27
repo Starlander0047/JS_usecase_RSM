@@ -5,31 +5,69 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Team Task Tracker</title>
     <link rel="stylesheet" href="taskTracker.css">
+    <link rel="icon" type="image/png" href="./group.png">
 </head>
 <body">
-    <div class="header">
-        <h1>Team Task Tracker</h1>
-    </div>
-
-    <div class="body">
-        <div class="addTask">
-            <input type="text" id="taskInput">
-            <button onclick="addTask()" id="taskInputBTN">Add Task</button>
+    <div class="wrapper">
+        <div class="content">
+            <div class="header">
+            <h1>Team Task Tracker</h1>
         </div>
-        
-        <h2>Tasks:</h2>
-        <div class="tasksDiv", id="tasksDiv">
 
-            <!-- Tasks will be rendered here -->
+        <div class="body">
+            <div class="addTask">
+                <input type="text" id="taskInput">
+                <button onclick="addTask()" id="taskInputBTN">Add Task</button>
+            </div>
+            
+            <h2>Your Tasks:</h2>
+            <div class="tasksDiv", id="tasksDiv">
+
+                <!-- Tasks will be rendered here -->
+
+            </div>
+        </div>
 
         </div>
+            
+        <div class="footer">
+                <p>Mail Issues At: asad.alei0047@gmail.com</p>
+                <p id="version"> Version: 1.0.0</p>
+            </div>
     </div>
+    
 </body>
 
 
 <script>
-    const tasks = [];
-    taskID = 0;
+    const tasks = getCachedTasks();
+    taskID = getCachedTaskID();
+    renderTasks();
+
+    function getCachedTasks()
+    {
+        const cachedTasks = sessionStorage.getItem('tasks');
+        if (cachedTasks) {
+            return JSON.parse(cachedTasks);
+        }
+        return [];
+    }
+    function getCachedTaskID()
+    {
+        const cachedTaskID = sessionStorage.getItem('taskID');
+        if (cachedTaskID) {
+            return parseInt(cachedTaskID);
+        }
+        return 0;
+    }
+    function cacheTasks()
+    {
+        sessionStorage.setItem('tasks', JSON.stringify(tasks));
+    }
+    function cacheTaskID()
+    {
+        sessionStorage.setItem('taskID', taskID);
+    }
 
     function addTask()
     {
@@ -48,6 +86,8 @@
         };
         tasks.push(task);
         taskInput.value = '';
+        cacheTasks();
+        cacheTaskID();
         renderTasks();
     }
 
@@ -101,7 +141,7 @@
             taskAssign.id = 'taskAssignSelect';
             taskAssign.className = 'taskAssignSelect';
             
-            const options = ['Select', 'Asad', 'Umar', 'Peter', 'Nitin', 'Piyush'];
+            const options = ['Select', 'Asad', 'Umar', 'Peter', 'Nitin', 'Piyush', 'Shahid', 'Upendra', 'Rishabh'];
             options.forEach(option => {
                 const opt = document.createElement('option');
                 opt.value = option;
@@ -231,6 +271,28 @@
             }
             else alert('Please select a valid status');
         }
+        else if(event.target && event.target.matches('.editButton'))
+        {
+            const taskDiv = event.target.closest('.task');
+            const taskID = parseInt(taskDiv.id);
+            const taskIndex = tasks.findIndex(task => task.id === taskID);
+            const taskValue = prompt('Edit Task:', tasks[taskIndex].value);
+            if (taskIndex > -1 && taskValue !== null && taskValue.trim() !== '')
+            {
+                tasks[taskIndex].value = taskValue.trim();
+                renderTasks();
+            }
+            else if (taskValue === null)
+            {
+                alert('**Edit CANCELLED');
+            }
+            else if(taskValue.trim() === '')
+            {
+                alert('**Task cannot be EMPTY');
+            }
+        }
+        cacheTasks();
+        cacheTaskID();
     });
 
 </script>

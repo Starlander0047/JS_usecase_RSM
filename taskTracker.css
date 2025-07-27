@@ -1,10 +1,13 @@
 *
 {
-    /* margin:0;
-    padding:0; */
     box-sizing: border-box;
     text-decoration: none;
     list-style: none;
+}
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
 }
 .header
 {
@@ -36,6 +39,7 @@
     padding: 20px;
     border: 1px solid #ccc;
     border-radius: 10px;
+    background-color: #f9f9f9;
 }
 #taskInput
 {
@@ -165,5 +169,45 @@
     color: #333;
     font-weight: bold;
 }
-
 /* CSS for the Display Overview Div Ends */
+
+
+/* CSS for the Foother Div Starts */
+.footer
+{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #76bbdc;
+    color: white;
+    text-align: center;
+    padding: 5px;
+    /* position: fixed;
+    bottom: 0; */
+    width: 100%;
+    border-top: 2px solid #ccc;
+    border-radius: 10px;
+    margin-top: 20px;
+    font-family: Arial, sans-serif
+}
+.footer #version
+{
+    color: red;
+}
+.footer p
+{
+    font-weight: bold;
+}
+.wrapper
+{
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+.content
+{
+  flex: 1; /* This ensures the content area takes up the remaining space */
+}
+
+
+/* CSS for the Foother Div Ends */
