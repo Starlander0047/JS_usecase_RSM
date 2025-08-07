@@ -1,51 +1,36 @@
-const tasks = getCachedTasks();
-taskID = getCachedTaskID();
-renderTasks();
+import { getCachedTasks, getCachedTaskID, cacheTasks, cacheTaskID } from './functions/cachingFuncs.js';
+import { deleteTask, editTask, assignTask, taskStatusUpdate } from './functions/operations.js';
+import {dropdown} from './functions/values.js';
 
-function getCachedTasks()
-{
-    const cachedTasks = sessionStorage.getItem('tasks');
-    if (cachedTasks) {
-        return JSON.parse(cachedTasks);
-    }
-    return [];
-}
-function getCachedTaskID()
-{
-    const cachedTaskID = sessionStorage.getItem('taskID');
-    if (cachedTaskID) {
-        return parseInt(cachedTaskID);
-    }
-    return 0;
-}
-function cacheTasks()
-{
-    sessionStorage.setItem('tasks', JSON.stringify(tasks));
-}
-function cacheTaskID()
-{
-    sessionStorage.setItem('taskID', taskID);
-}
+const tasks = getCachedTasks();
+let taskID = getCachedTaskID();           
+renderTasks();
 
 function addTask()
 {
     const taskInput = document.getElementById('taskInput');
     const taskValue = taskInput.value.trim();
-    if (taskValue === '') {
-        alert('Please enter a task');
-        return;
-    }
-    taskID++;
-    const task = {
-        id: taskID,
-        value: taskValue,
-        status: "*New",
-        assignedTo: []
-    };
-    tasks.push(task);
-    taskInput.value = '';
-    cacheTasks();
-    cacheTaskID();
+        if (taskValue === '')
+        {
+            throw new Error('Task cannot be empty');
+        }
+        taskID++;
+        const task = {
+            id: taskID,
+            value: taskValue,
+            status: dropdown.taskStatusList.list[0], // Default to 'Select'
+            assignedTo: []
+        };
+        tasks.push(task);
+        taskInput.value = '';
+        
+        cacheAndRenderTasks();
+}
+
+function cacheAndRenderTasks()
+{
+    cacheTasks(tasks);
+    cacheTaskID(taskID);
     renderTasks();
 }
 
@@ -80,17 +65,19 @@ function renderTasks() {
         const deleteButton = document.createElement('button');
         deleteButton.textContent = 'Delete Task';
         deleteButton.className = 'deleteButton';
+        deleteButton.addEventListener('click', (event) => { deleteTask (event, tasks, cacheAndRenderTasks); });
 
         // Edit Button
         const editButton = document.createElement('button');
         editButton.className = 'editButton';
         editButton.textContent = 'Edit Task';
+        editButton.addEventListener('click', (event) => {editTask(event, tasks, cacheAndRenderTasks); });
 
         // Task Assign Input
         const taskAssignDiv = document.createElement('div');
         taskAssignDiv.className = 'taskAssignDiv';
 
-        label = document.createElement('label');
+        const label = document.createElement('label');
         label.textContent = 'Assign To: ';
         label.className = 'taskAssignLabel';
         taskAssignDiv.appendChild(label);
@@ -99,7 +86,7 @@ function renderTasks() {
         taskAssign.id = 'taskAssignSelect';
         taskAssign.className = 'taskAssignSelect';
         
-        const options = ['Select', 'Asad', 'Umar', 'Peter', 'Nitin', 'Piyush', 'Shahid', 'Upendra', 'Rishabh'];
+        const options = dropdown.assignToList;
         options.forEach(option => {
             const opt = document.createElement('option');
             opt.value = option;
@@ -113,6 +100,7 @@ function renderTasks() {
         const taskAssignBTN = document.createElement('button');
         taskAssignBTN.textContent = 'Assign Task';
         taskAssignBTN.className = 'taskAssignBTN';
+        taskAssignBTN.addEventListener('click', (event) => { assignTask(event, tasks, cacheAndRenderTasks); });
 
         taskAssignDiv.appendChild(taskAssign);
         taskAssignDiv.appendChild(taskAssignBTN);
@@ -130,7 +118,7 @@ function renderTasks() {
         const taskStatus = document.createElement('select');
         taskStatus.id = 'taskStatusSelect';
         taskStatus.className = 'taskStatusSelect';
-        const statusOptions = ['Select', 'Todo', 'In-progress', 'Done'];
+        const statusOptions = dropdown.taskStatusList.list;
         statusOptions.forEach(status => {
             const statusOpt = document.createElement('option');
             statusOpt.value = status
@@ -146,6 +134,7 @@ function renderTasks() {
         const taskStatusBTN = document.createElement('button');
         taskStatusBTN.textContent = 'Update Status';
         taskStatusBTN.className = 'taskStatusBTN';
+        taskStatusBTN.addEventListener('click', (event) => { taskStatusUpdate(event, tasks, cacheAndRenderTasks); });
         statusDiv.appendChild(taskStatusBTN);
 
 
@@ -167,6 +156,16 @@ function renderTasks() {
         const displayStatus = document.createElement('h2');
         displayStatus.className = 'displayStatus';
         displayStatus.textContent = `Status: ${task.status}`;
+        // Set color based on task status
+        const statusIndex = dropdown.taskStatusList.list.indexOf(task.status);
+        if(dropdown.taskStatusList.list.length !== dropdown.taskStatusList.color.length)
+        {
+            alert("***Please provide sufficient colors in the values.js file !")
+            displayStatus.style.color = "black";
+        }
+        else displayStatus.style.color = dropdown.taskStatusList.color[statusIndex];
+
+
         displayOverview.appendChild(displayStatus);
 
         taskDiv.appendChild(displayOverview);
@@ -185,70 +184,4 @@ function renderTasks() {
     }
 }
 
-// Add event listener to tasksDiv
-const tasksDiv = document.getElementById('tasksDiv');
-tasksDiv.addEventListener('click', function(event) {
-    if(event.target && event.target.matches('.deleteButton'))
-    {
-        const taskDiv = event.target.closest('.task');
-        const taskId = parseInt(taskDiv.id);
-        const taskIndex = tasks.findIndex(task => task.id === taskId);
-        if (taskIndex > -1)
-        {
-            tasks.splice(taskIndex, 1);
-            renderTasks();
-        }
-    }
-    else if(event.target && event.target.matches('.taskAssignBTN'))
-    {
-        const taskDiv = event.target.closest('.task');
-        const taskID = parseInt(taskDiv.id);
-        const taskIndex = tasks.findIndex(task => task.id === taskID);
-        const taskAssignSelect = taskDiv.querySelector('#taskAssignSelect');
-        const assignedTo = taskAssignSelect.value;
-        if (taskIndex > -1 && assignedTo !== 'Select' && tasks[taskIndex].assignedTo.includes(assignedTo) === false)
-        {
-            tasks[taskIndex].assignedTo.push(assignedTo);
-            alert(`Task assigned to ${assignedTo}`);
-            renderTasks();
-        }
-        else alert('Please select a valid user to assign the task');
-    }
-    else if(event.target && event.target.matches('.taskStatusBTN'))
-    {
-        const taskDiv = event.target.closest('.task');
-        const taskID = parseInt(taskDiv.id);
-        const taskIndex = tasks.findIndex(task => task.id === taskID);
-        const taskStatusSelect = taskDiv.querySelector('#taskStatusSelect');
-        const status = taskStatusSelect.value;
-        if (taskIndex > -1 && status !== 'Select')
-        {
-            tasks[taskIndex].status = status;
-            alert(`Task status updated to ${status}`);
-            renderTasks();
-        }
-        else alert('Please select a valid status');
-    }
-    else if(event.target && event.target.matches('.editButton'))
-    {
-        const taskDiv = event.target.closest('.task');
-        const taskID = parseInt(taskDiv.id);
-        const taskIndex = tasks.findIndex(task => task.id === taskID);
-        const taskValue = prompt('Edit Task:', tasks[taskIndex].value);
-        if (taskIndex > -1 && taskValue !== null && taskValue.trim() !== '')
-        {
-            tasks[taskIndex].value = taskValue.trim();
-            renderTasks();
-        }
-        else if (taskValue === null)
-        {
-            alert('**Edit CANCELLED');
-        }
-        else if(taskValue.trim() === '')
-        {
-            alert('**Task cannot be EMPTY');
-        }
-    }
-    cacheTasks();
-    cacheTaskID();
-});
+export { addTask }; // Export functions for use in index.html

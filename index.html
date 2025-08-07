@@ -5,12 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Team Task Tracker</title>
 
-    <link rel="stylesheet" href="taskTracker.css">
-    <script src="index.js" defer></script>
-
-    <link rel="icon" type="image/png" href="./group.png">
+    <link rel="stylesheet" href="./css/taskTracker.css">
+    <link rel="icon" type="image/png" href="./imgs/group.png">
+    
 </head>
-<body">
+<body>
     <div class="wrapper">
         <div class="content">
             <div class="header">
@@ -20,7 +19,7 @@
         <div class="body">
             <div class="addTask">
                 <input type="text" id="taskInput">
-                <button onclick="addTask()" id="taskInputBTN">Add Task</button>
+                <button id="taskInputBTN">Add Task</button>
             </div>
             
             <h2>Your Tasks:</h2>
@@ -35,10 +34,27 @@
             
         <div class="footer">
                 <p>Mail Issues At: asad.alei0047@gmail.com</p>
-                <p id="version"> Version: 1.0.0</p>
+                <p id="version"> asda</p>
             </div>
     </div>
     
 </body>
+
+<script type="module">
+        import { addTask } from './index.js';
+        import { dropdown } from './functions/values.js';
+
+        // Event listener for adding a task
+        document.getElementById('taskInputBTN').addEventListener('click', () => {
+           try{
+             addTask();
+           } catch(error){
+            alert(error.message);
+           }
+        });
+
+        document.getElementById("version").innerText = `Version: ${dropdown.version}`
+        
+    </script>
 
 </html>
